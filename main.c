@@ -1,12 +1,12 @@
 #include "include/url.h"
+#include "include/download.h"
 
 int main(int argc, char** argv){
     if (argc != 2){
         printf("Incorrect number of arguments");
-
         return 1;
     }
-
+    
     url_t url;
 
     if (parseURL(argv[1], &url) != 0){
@@ -14,7 +14,11 @@ int main(int argc, char** argv){
         return -1;
     }
 
-    //if (download(&url) != 0) return -1;
+    if(transferFile(&url)){
+        perror("Error transfering file\n");
+        exit(1);
+    }
+
     return 0;
     
 }

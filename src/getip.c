@@ -5,7 +5,7 @@
 #include "../include/getip.h"
 
 
-int getIP(const char* ipadress) {
+char* getIP(const char* ipadress) {
     struct hostent *h;
 
 /**
@@ -22,13 +22,13 @@ int getIP(const char* ipadress) {
 
     #define h_addr h_addr_list[0]	The first address in h_addr_list.
 */
+
+    printf("%s\n", ipadress);
     if ((h = gethostbyname(ipadress)) == NULL) {
         herror("gethostbyname()");
-        return -1;
+        exit(1);
     }
 
     printf("Host name  : %s\n", h->h_name);
-    printf("IP Address : %s\n", inet_ntoa(*((struct in_addr *) h->h_addr)));
-
-    return 0;
+    return inet_ntoa(*((struct in_addr *) h->h_addr));
 }

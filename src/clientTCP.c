@@ -58,6 +58,7 @@ int clientTCP(int argc, char **argv) {
         perror("close()");
         exit(-1);
     }
+    
     return 0;
 }
 

@@ -16,7 +16,7 @@ int needsUser(char *arguments){
 int parseURL(char *arg, url_t *url){
 
     bzero((url_t*) url, sizeof(url_t));
-    
+
     char* ftp = strtok(arg, "/");
     
     if(strcmp(FTP_HEADER, ftp)){
@@ -25,39 +25,38 @@ int parseURL(char *arg, url_t *url){
     }
 
     char* arguments = strtok(NULL, "/");
-    char* url_path = strtok(NULL, "/");
-
+    char* url_path = strtok(NULL, "\0");
 
     if (arguments == NULL || url_path == NULL){
         printf("Some field is invalid!\n");
         exit(EXIT_FAILURE);
     }
 
+    char* username = "anonymous";
+    char* pass = "pass";
     char* loginfield;
     char* hostname;
 
     if (needsUser(arguments)){
         loginfield = strtok(arguments, "@");
         hostname = strtok(NULL, "\0");
-        char* username = strtok(loginfield, ":");
-        char* pass = strtok(NULL, ":");
+        char* buff = strtok(loginfield, ":");
 
-        if(username == NULL){
-            username = "anonymous";
+        if(buff != NULL){
+            strncpy(username, buff, strlen(buff));
         }
-        if(pass == NULL){
-            pass = "pass";
-        }
-
-        strncpy(url->username, username, strlen(username));
-        strncpy(url->pass, pass, strlen(pass));
         
+        buff = strtok(NULL, ":");
+        if(buff != NULL){
+            strncpy(pass, buff, strlen(buff));
+        }        
     }
     else{
         hostname = strtok(arguments, "@");
     }
 
-
+    strncpy(url->username, username, strlen(username));
+    strncpy(url->pass, pass, strlen(pass));
     strncpy(url->hostname, hostname, strlen(hostname));
     strncpy(url->path, url_path, strlen(url_path));
 
@@ -71,8 +70,7 @@ int parseURL(char *arg, url_t *url){
     printf("Host: %s\n", url->hostname);
     printf("URL Path: %s\n", url->path);
 
-    char* ipaddress = "";
-    if (getIP(ipaddress) != 0) return -1;
+    char* ipaddress = getIP(hostname);
 
     strncpy(url->ip, ipaddress, strlen(ipaddress));
 

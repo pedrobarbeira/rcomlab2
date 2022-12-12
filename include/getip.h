@@ -5,4 +5,4 @@
 #include<arpa/inet.h>
 
 
-int getIP(const char* ipadress);
+char * getIP(const char* ipadress);
